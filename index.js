@@ -1,0 +1,13 @@
+import express from "express";
+import userRoute from "./src/routes/user.route.js";
+
+const app = express();
+
+app.use(express.json());
+app.use("/auth", userRoute);
+
+const port = 3000;
+
+app.listen(port, () => {
+  console.log(`server is running on port ${port}`);
+});
