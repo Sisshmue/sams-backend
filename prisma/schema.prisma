@@ -12,12 +12,6 @@ datasource db {
   provider = "postgresql"
 }
 
-enum Role {
-  ADMIN
-  EMPLOYEE
-  TECHNICIAN
-}
-
 enum AssetStatus {
   AVAILABLE
   ASSIGNED
@@ -42,87 +36,56 @@ enum Priority {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  name         String
-  email        String   @unique
-  password     String
-  role         Role     @default(EMPLOYEE)
-  isActive     Boolean  @default(true)
-  departmentId Int?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  password String
+  roleId   Int
 
-  department          Department?          @relation(fields: [departmentId], references: [id])
-  assignments         AssetAssignment[]
-  maintenanceRequests MaintenanceRequest[] @relation("RequestedBy")
-  assignedRequests    MaintenanceRequest[] @relation("AssignedTo")
-  auditLogs           AuditLog[]
+  role     Role      @relation(fields: [roleId], references: [id])
+  employee Employee?
 }
 
-model Department {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  createdAt DateTime @default(now())
+model Role {
+  id       Int    @id @default(autoincrement())
+  position String
 
-  users  User[]
-  assets Asset[]
+  users User[]
+}
+
+model Employee {
+  id           Int  @id @default(autoincrement())
+  userId       Int  @unique
+  departmentId Int?
+
+  user             User              @relation(fields: [userId], references: [id])
+  assetAssignments AssetAssignment[]
+  department       Department?       @relation(fields: [departmentId], references: [id])
 }
 
 model Asset {
-  id           Int         @id @default(autoincrement())
-  name         String
-  assetTag     String      @unique
-  category     String
-  status       AssetStatus @default(AVAILABLE)
-  purchaseDate DateTime?
-  purchaseCost Float?
-  departmentId Int?
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-
-  department          Department?          @relation(fields: [departmentId], references: [id])
-  assignments         AssetAssignment[]
-  maintenanceRequests MaintenanceRequest[]
+  id               Int               @id @default(autoincrement())
+  name             String
+  isActive         Boolean
+  status           AssetStatus       @default(AVAILABLE)
+  assetAssignments AssetAssignment[]
 }
 
 model AssetAssignment {
   id         Int       @id @default(autoincrement())
   assetId    Int
-  userId     Int
+  employeeId Int
   assignedAt DateTime  @default(now())
   returnedAt DateTime?
   notes      String?
 
-  asset Asset @relation(fields: [assetId], references: [id])
-  user  User  @relation(fields: [userId], references: [id])
+  employee Employee @relation(fields: [employeeId], references: [id])
+  asset    Asset    @relation(fields: [assetId], references: [id])
 }
 
-model MaintenanceRequest {
-  id             Int               @id @default(autoincrement())
-  assetId        Int
-  requestedById  Int
-  assignedToId   Int?
-  status         MaintenanceStatus @default(PENDING)
-  priority       Priority          @default(MEDIUM)
-  issueDesc      String
-  resolutionNote String?
-  cost           Float?
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
+model Department {
+  id   Int    @id @default(autoincrement())
+  name String
 
-  asset       Asset @relation(fields: [assetId], references: [id])
-  requestedBy User  @relation("RequestedBy", fields: [requestedById], references: [id])
-  assignedTo  User? @relation("AssignedTo", fields: [assignedToId], references: [id])
-}
-
-model AuditLog {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  action    String
-  entity    String
-  entityId  Int?
-  details   Json?
-  createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id])
+  employee Employee[]
 }
