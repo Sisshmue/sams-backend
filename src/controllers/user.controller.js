@@ -6,7 +6,18 @@ export const userRegister = async (req, res) => {
     res.status(200).json(result);
   } catch (error) {
     res.status(400).json({
-      message: e.message,
+      message: error.message,
+    });
+  }
+};
+
+export const userLogin = async (req, res) => {
+  try {
+    const result = await userServices.loginUser(req.body);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(400).json({
+      message: error.message,
     });
   }
 };

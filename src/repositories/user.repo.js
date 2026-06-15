@@ -11,3 +11,7 @@ export const createEmployee = (data, tx = prisma) => {
 export const findUserByEmail = (email) => {
   return prisma.user.findUnique({ where: { email } });
 };
+
+export const findEmployeByEmail = (userId) => {
+  return prisma.employee.findUnique({ where: { userId } });
+};

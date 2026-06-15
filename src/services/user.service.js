@@ -38,11 +38,36 @@ export const registerUser = async (data) => {
         id: createdUser.id,
         name: createdUser.name,
         email: createdUser.email,
-        role: createdUser.roleId,
+        roleId: createdUser.roleId,
         departmentId: createdEmployee.departmentId,
         createdAt: createdUser.createdAt,
       },
       token,
     };
   });
+};
+
+export const loginUser = async (data) => {
+  const { email, password } = data;
+  const existingUser = await userRepo.findUserByEmail(email);
+  if (!existingUser) {
+    throw new Error("User's email does not exist!");
+  }
+  const matchedpassword = bcrypt.compareSync(password, existingUser.password);
+  if (!matchedpassword) {
+    throw new Error("Invalid Credentials");
+  }
+  const token = generateToken(existingUser);
+  const existingEmployee = await userRepo.findEmployeByEmail(existingUser.id);
+  return {
+    user: {
+      id: existingUser.id,
+      name: existingUser.name,
+      email: existingUser.email,
+      roleId: existingUser.roleId,
+      departmentId: existingEmployee.departmentId,
+      createdAt: existingUser.createdAt,
+    },
+    token,
+  };
 };

@@ -36,11 +36,12 @@ enum Priority {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  name     String
-  email    String @unique
-  password String
-  roleId   Int
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  roleId    Int
+  createdAt DateTime @default(now())
 
   role     Role      @relation(fields: [roleId], references: [id])
   employee Employee?
