@@ -9,11 +9,14 @@ export const createEmployee = (data, tx = prisma) => {
   return tx.employee.create({ data });
 };
 
+//user managements
 export const findUserByEmail = (email) => {
-  return prisma.user.findUnique({ where: { email } });
+  return prisma.user.findUnique({
+    where: { email },
+    include: { employee: true },
+  });
 };
 
-//user managements
 export const findUserById = (userId, tx = prisma) => {
   return tx.user.findUnique({
     where: { id: userId },
@@ -33,12 +36,40 @@ export const getUsers = (filters = {}) => {
       employee: departmentId
         ? { departmentId: Number(departmentId) }
         : undefined,
+      isDeactivated: false,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      roleId: true,
+      employee: {
+        select: {
+          departmentId: true,
+        },
+      },
+      createdAt: true,
     },
   });
 };
 
 export const updateUser = (userId, data) => {
-  return prisma.user.update({ where: { id: userId }, data });
+  return prisma.user.update({
+    where: { id: userId },
+    data,
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      roleId: true,
+      employee: {
+        select: {
+          departmentId: true,
+        },
+      },
+      createdAt: true,
+    },
+  });
 };
 
 export const deactivateUser = (userId) => {

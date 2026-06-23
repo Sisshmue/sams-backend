@@ -2,6 +2,7 @@ import * as userRepo from "../repositories/user.repo.js";
 import bcrypt from "bcrypt";
 import { generateToken } from "../util/generateToken.js";
 import prisma from "../data/prisma.js";
+import route from "../routes/user.route.js";
 
 export const registerUser = async (data) => {
   const { name, email, password, roleId, departmentId } = data;
@@ -72,8 +73,7 @@ export const loginUser = async (data) => {
   };
 };
 
-export const findUserById = async (data) => {
-  const { userId } = data;
+export const findUserById = async (userId) => {
   return await prisma.$transaction(async (tx) => {
     const user = await userRepo.findUserById(userId, tx);
     const employee = await userRepo.findEmployeByUserId(userId, tx);
@@ -91,18 +91,31 @@ export const findUserById = async (data) => {
   });
 };
 
+export const findUserByEmail = async (email) => {
+  const reult = await userRepo.findUserByEmail(email);
+  return {
+    user: {
+      id: reult.id,
+      name: reult.name,
+      email: reult.email,
+      roleId: reult.roleId,
+      departmentId: reult.employee.departmentId,
+      createdAt: reult.createdAt,
+    },
+  };
+};
+
 export const getUsers = async (data) => {
   const result = await userRepo.getUsers(data);
   return result;
 };
 
-export const updateUser = async (data) => {
-  const updatedUser = await userRepo.updateUser(data);
+export const updateUser = async (userId, data) => {
+  const updatedUser = await userRepo.updateUser(userId, data);
   return updatedUser;
 };
 
-export const deactivateUser = async (data) => {
-  const { userId } = data;
+export const deactivateUser = async (userId) => {
   const result = await userRepo.deactivateUser(userId);
   return result;
 };
