@@ -58,7 +58,7 @@ export const loginUser = async (data) => {
     throw new Error("Invalid Credentials");
   }
   const token = generateToken(existingUser);
-  const existingEmployee = await userRepo.findEmployeByEmail(existingUser.id);
+  const existingEmployee = await userRepo.findEmployeByUserId(existingUser.id);
   return {
     user: {
       id: existingUser.id,
@@ -70,4 +70,39 @@ export const loginUser = async (data) => {
     },
     token,
   };
+};
+
+export const findUserById = async (data) => {
+  const { userId } = data;
+  return await prisma.$transaction(async (tx) => {
+    const user = await userRepo.findUserById(userId, tx);
+    const employee = await userRepo.findEmployeByUserId(userId, tx);
+
+    return {
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        roleId: user.roleId,
+        departmentId: employee.departmentId,
+        createdAt: user.createdAt,
+      },
+    };
+  });
+};
+
+export const getUsers = async (data) => {
+  const result = await userRepo.getUsers(data);
+  return result;
+};
+
+export const updateUser = async (data) => {
+  const updatedUser = await userRepo.updateUser(data);
+  return updatedUser;
+};
+
+export const deactivateUser = async (data) => {
+  const { userId } = data;
+  const result = await userRepo.deactivateUser(userId);
+  return result;
 };
