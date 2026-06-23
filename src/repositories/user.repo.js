@@ -78,3 +78,7 @@ export const deactivateUser = (userId) => {
     data: { isDeactivated: true },
   });
 };
+
+export const getRoles = () => {
+  return prisma.role.findMany({});
+};

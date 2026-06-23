@@ -81,3 +81,14 @@ export const deactivateUser = async (req, res) => {
     });
   }
 };
+
+export const getRoles = async (req, res) => {
+  try {
+    const result = await userServices.getRoles();
+    return res.status(200).json(result);
+  } catch (error) {
+    res.status(400).json({
+      message: error.message,
+    });
+  }
+};

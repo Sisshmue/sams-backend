@@ -119,3 +119,8 @@ export const deactivateUser = async (userId) => {
   const result = await userRepo.deactivateUser(userId);
   return result;
 };
+
+export const getRoles = async () => {
+  const result = await userRepo.getRoles();
+  return result;
+};
