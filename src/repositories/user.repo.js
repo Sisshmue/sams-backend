@@ -82,3 +82,15 @@ export const deactivateUser = (userId) => {
 export const getRoles = () => {
   return prisma.role.findMany({});
 };
+
+export const addRole = (data) => {
+  return prisma.role.create({ data });
+};
+
+export const updateRole = (roleId, data) => {
+  return prisma.role.update({ where: { id: roleId }, data });
+};
+
+export const deleteRole = (roleId) => {
+  return prisma.role.delete({ where: { id: roleId } });
+};

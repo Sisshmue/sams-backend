@@ -1,17 +1,20 @@
 import { getRoles } from "../services/user.service.js";
 
-const roleMiddleware = async (req, res, next) => {
-  try {
-    const roles = await getRoles();
-    const adminRoleId = roles.find((role) => role.position == "Admin");
-    const user = req.user;
-    if (user.roleId != adminRoleId.id) {
-      res.status(400).json({ message: "Access Denied" });
+const roleMiddleware =
+  (...allowedRoles) =>
+  async (req, res, next) => {
+    try {
+      const roles = await getRoles();
+      const user = req.user;
+
+      const userRole = roles.find((role) => role.id == user.roleId);
+      if (!userRole || !allowedRoles.includes(userRole.position)) {
+        return res.status(403).json({ message: "Access Denied" });
+      }
+      next();
+    } catch (error) {
+      res.status(500).json({ message: "Authorization check failed" });
     }
-    next();
-  } catch (error) {
-    res.status(400).json(error.message);
-  }
-};
+  };
 
 export default roleMiddleware;
