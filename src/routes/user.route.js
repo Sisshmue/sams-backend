@@ -7,33 +7,38 @@ const route = Router();
 route.post(
   "/getUserById",
   authMiddleware,
-  roleMiddleware,
+  roleMiddleware("Admin"),
   userController.getUserById,
 );
 route.post(
   "/getUserByEmail",
   authMiddleware,
-  roleMiddleware,
+  roleMiddleware("Admin"),
   userController.getUserByEmail,
 );
 route.post(
   "/getUsers",
   authMiddleware,
-  roleMiddleware,
+  roleMiddleware("Admin"),
   userController.getUsers,
 );
 route.post(
   "/updateUser",
   authMiddleware,
-  roleMiddleware,
+  roleMiddleware("Admin"),
   userController.updatedUser,
 );
 route.post(
   "/deleteUser",
   authMiddleware,
-  roleMiddleware,
+  roleMiddleware("Admin"),
   userController.deactivateUser,
 );
-route.get("/getRoles", authMiddleware, roleMiddleware, userController.getRoles);
+route.get(
+  "/getRoles",
+  authMiddleware,
+  roleMiddleware("Admin"),
+  userController.getRoles,
+);
 
 export default route;
