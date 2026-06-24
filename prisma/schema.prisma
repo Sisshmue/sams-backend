@@ -60,17 +60,28 @@ model Employee {
   userId       Int  @unique
   departmentId Int?
 
-  user             User              @relation(fields: [userId], references: [id])
-  assetAssignments AssetAssignment[]
-  department       Department?       @relation(fields: [departmentId], references: [id])
+  user                User                 @relation(fields: [userId], references: [id])
+  assetAssignments    AssetAssignment[]
+  department          Department?          @relation(fields: [departmentId], references: [id])
+  maintenanceRequests MaintenanceRequest[] @relation("RequestedBy")
+  assignedMaintenance MaintenanceRequest[] @relation("AssignedTo")
 }
 
 model Asset {
-  id               Int               @id @default(autoincrement())
-  name             String
-  isActive         Boolean
-  status           AssetStatus       @default(AVAILABLE)
-  assetAssignments AssetAssignment[]
+  id           Int         @id @default(autoincrement())
+  name         String
+  description  String?
+  serialNumber String?     @unique // real-world assets have serial numbers
+  category     String? // e.g. Laptop, Vehicle, Furniture
+  purchaseDate DateTime?
+  purchaseCost Decimal?    @db.Decimal(10, 2) // needed for cost reports
+  status       AssetStatus @default(AVAILABLE)
+  isActive     Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  assetAssignments    AssetAssignment[]
+  maintenanceRequests MaintenanceRequest[]
 }
 
 model AssetAssignment {
@@ -83,6 +94,24 @@ model AssetAssignment {
 
   employee Employee @relation(fields: [employeeId], references: [id])
   asset    Asset    @relation(fields: [assetId], references: [id])
+}
+
+model MaintenanceRequest {
+  id          Int               @id @default(autoincrement())
+  assetId     Int
+  requestedBy Int // Employee id
+  assignedTo  Int? // Technician's Employee id
+  status      MaintenanceStatus @default(PENDING)
+  priority    Priority          @default(MEDIUM)
+  description String
+  cost        Decimal?          @db.Decimal(10, 2) // filled in when completed
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  resolvedAt  DateTime?
+
+  asset      Asset     @relation(fields: [assetId], references: [id])
+  employee   Employee  @relation("RequestedBy", fields: [requestedBy], references: [id])
+  technician Employee? @relation("AssignedTo", fields: [assignedTo], references: [id])
 }
 
 model Department {
