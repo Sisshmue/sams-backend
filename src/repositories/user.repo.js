@@ -28,7 +28,7 @@ export const findEmployeByUserId = (userId, tx = prisma) => {
   return tx.employee.findUnique({ where: { userId } });
 };
 
-export const getUsers = (page = 1, limit = 10, ...filters) => {
+export const getUsers = (page = 1, limit = 10, filters = {}) => {
   const { roleId, departmentId } = filters;
   return prisma.user.findMany({
     where: {
