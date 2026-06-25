@@ -40,5 +40,23 @@ route.get(
   roleMiddleware("Admin"),
   userController.getRoles,
 );
+route.get(
+  "/createRole",
+  authMiddleware,
+  roleMiddleware("Admin"),
+  userController.createRole,
+);
+route.get(
+  "/updateRole",
+  authMiddleware,
+  roleMiddleware("Admin"),
+  userController.updateRole,
+);
+route.get(
+  "/deleteRole",
+  authMiddleware,
+  roleMiddleware("Admin"),
+  userController.updateRole,
+);
 
 export default route;

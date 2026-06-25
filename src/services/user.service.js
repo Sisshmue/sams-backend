@@ -124,3 +124,18 @@ export const getRoles = async () => {
   const result = await userRepo.getRoles();
   return result;
 };
+
+export const createRole = async (data) => {
+  const result = await userRepo.createRole(data);
+  return result;
+};
+
+export const updateRole = async (roleId, data) => {
+  const result = await userRepo.updateRole(roleId, data);
+  return result;
+};
+
+export const deleteRole = async (roleId) => {
+  const result = await userRepo.deleteRole(roleId);
+  return result;
+};

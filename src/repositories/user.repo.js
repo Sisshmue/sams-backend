@@ -83,7 +83,7 @@ export const getRoles = () => {
   return prisma.role.findMany({});
 };
 
-export const addRole = (data) => {
+export const createRole = (data) => {
   return prisma.role.create({ data });
 };
 

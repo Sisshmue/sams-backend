@@ -92,3 +92,46 @@ export const getRoles = async (req, res) => {
     });
   }
 };
+
+export const createRole = async (req, res) => {
+  try {
+    const data = req.body.data;
+    await userServices.createRole(data);
+    return res.status(200).json({
+      message: "Role Creation successfully!",
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error.message,
+    });
+  }
+};
+
+export const updateRole = async (req, res) => {
+  try {
+    const roleId = req.body.id;
+    const data = req.body.data;
+    await userServices.updateRole(roleId, data);
+    return res.status(200).json({
+      message: "Successfully Updated!",
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error.message,
+    });
+  }
+};
+
+export const deleteRole = async (req, res) => {
+  try {
+    const roleId = req.body.id;
+    await userServices.deleteRole(roleId);
+    return res.status(200).json({
+      message: "Successfully deleted!",
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error.message,
+    });
+  }
+};
