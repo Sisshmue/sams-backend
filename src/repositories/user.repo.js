@@ -25,7 +25,16 @@ export const findUserById = (userId, tx = prisma) => {
 };
 
 export const findEmployeByUserId = (userId, tx = prisma) => {
-  return tx.employee.findUnique({ where: { userId } });
+  return tx.employee.findUnique({
+    where: { userId },
+    select: {
+      user: {
+        select: {
+          isDeactivated: true,
+        },
+      },
+    },
+  });
 };
 
 export const getUsers = (page = 1, limit = 10, filters = {}) => {
@@ -50,6 +59,7 @@ export const getUsers = (page = 1, limit = 10, filters = {}) => {
           departmentId: true,
         },
       },
+      isDeactivated: true,
       createdAt: true,
     },
   });
@@ -69,6 +79,7 @@ export const updateUser = (userId, data) => {
           departmentId: true,
         },
       },
+      isDeactivated: true,
       createdAt: true,
     },
   });

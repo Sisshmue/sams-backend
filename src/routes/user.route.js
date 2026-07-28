@@ -56,7 +56,7 @@ route.get(
   "/deleteRole",
   authMiddleware,
   roleMiddleware("Admin"),
-  userController.updateRole,
+  userController.deleteRole,
 );
 
 export default route;

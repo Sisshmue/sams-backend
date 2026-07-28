@@ -1,0 +1,193 @@
+@baseUrl = http://localhost:3000
+
+# ==========================================
+# AUTH ENDPOINTS
+# ==========================================
+
+### Register a new user
+# @name register
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Admin User",
+  "email": "admin@example.com",
+  "password": "password123",
+  "roleId": 1,
+  "departmentId": 1
+}
+
+### Login user
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "password123"
+}
+
+### Active Token from Login Response
+@authToken = {{login.response.body.token}}
+
+
+# ==========================================
+# USER ENDPOINTS (Requires Auth & Admin role)
+# ==========================================
+
+### Get user by ID
+POST {{baseUrl}}/user/getUserById
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "id": 7
+}
+
+### Get user by email
+POST {{baseUrl}}/user/getUserByEmail
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "email": "admin@example.com"
+}
+
+### Get users (filtered by role or department)
+POST {{baseUrl}}/user/getUsers
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "departmentId": 1
+}
+
+### Update user details
+POST {{baseUrl}}/user/updateUser
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "userId": 7,
+  "data": {
+    "name": "Updated Admin User"
+  }
+}
+
+### Deactivate/Delete user
+POST {{baseUrl}}/user/deleteUser
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "id": 7
+}
+
+### Get all roles
+GET {{baseUrl}}/user/getRoles
+Authorization: Bearer {{authToken}}
+
+### Create a new role
+# Note: Defined as GET in user.route.js but reads data from req.body
+GET {{baseUrl}}/user/createRole
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "data": {
+    "position": "New role"
+  }
+}
+
+### Update a role
+# Note: Defined as GET in user.route.js but reads data from req.body
+GET {{baseUrl}}/user/updateRole
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "id": 4,
+  "data": {
+    "position": "Lead Technician"
+  }
+}
+
+### Delete a role
+# Note: Defined as GET in user.route.js but reads data from req.body
+GET {{baseUrl}}/user/deleteRole
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "id": 4
+}
+
+
+# ==========================================
+# ASSET ENDPOINTS (Requires Auth)
+# ==========================================
+
+### Get all assets (with pagination and filtering)
+GET {{baseUrl}}/asset?page=1&limit=10&status=AVAILABLE
+Authorization: Bearer {{authToken}}
+
+### Get asset detail by ID
+GET {{baseUrl}}/asset/1
+Authorization: Bearer {{authToken}}
+
+### Create a new asset (Admin only)
+POST {{baseUrl}}/asset
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "MacBook Pro 16",
+  "description": "Developer Laptop",
+  "serialNumber": "SN-MBP16-2027",
+  "category": "Laptop",
+  "purchaseDate": "2026-07-28T12:00:00.000Z",
+  "purchaseCost": 2499.99,
+  "status": "AVAILABLE"
+}
+
+### Edit an existing asset (Admin only)
+PUT {{baseUrl}}/asset/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "isActive" : true
+}
+
+### Update asset status only (Admin only)
+PATCH {{baseUrl}}/asset/1/status
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "status": "AVAILABLE"
+}
+
+### Soft delete an asset (Admin only)
+DELETE {{baseUrl}}/asset/1
+Authorization: Bearer {{authToken}}
+
+
+# ==========================================
+# ASSIGNMENT ENDPOINTS (Requires Auth)
+# ==========================================
+
+### Get all assignments (with pagination and filtering)
+GET {{baseUrl}}/assignment?page=1&limit=10&returnedAt=null
+Authorization: Bearer {{authToken}}
+
+### Create a new assignment (Admin only)
+POST {{baseUrl}}/assignment
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "assetId": 1,
+  "employeeId": 1,
+  "notes": "Assigned to team lead for development use."
+}

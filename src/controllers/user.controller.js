@@ -48,8 +48,16 @@ export const getUserByEmail = async (req, res) => {
 
 export const getUsers = async (req, res) => {
   try {
-    const { roleId, departmentId } = req.body;
-    const result = await userServices.getUsers({ roleId, departmentId });
+    const { roleId, departmentId, page, limit } = req.body;
+    const parsedPage = page !== undefined ? parseInt(page, 10) : undefined;
+    const parsedLimit = limit !== undefined ? parseInt(limit, 10) : undefined;
+
+    const result = await userServices.getUsers({
+      roleId,
+      departmentId,
+      page: parsedPage,
+      limit: parsedLimit,
+    });
     return res.status(200).json(result);
   } catch (error) {
     res.status(400).json({

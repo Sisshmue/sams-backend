@@ -74,39 +74,46 @@ export const loginUser = async (data) => {
 };
 
 export const findUserById = async (userId) => {
-  return await prisma.$transaction(async (tx) => {
-    const user = await userRepo.findUserById(userId, tx);
-    const employee = await userRepo.findEmployeByUserId(userId, tx);
+  const user = await userRepo.findUserById(userId);
+  if (!user) {
+    throw new Error("User not found");
+  }
 
-    return {
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        roleId: user.roleId,
-        departmentId: employee.departmentId,
-        createdAt: user.createdAt,
-      },
-    };
-  });
+  return {
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      roleId: user.roleId,
+      departmentId: user.employee?.departmentId || null,
+      isDeactivated: user.isDeactivated,
+      createdAt: user.createdAt,
+    },
+  };
 };
 
 export const findUserByEmail = async (email) => {
-  const reult = await userRepo.findUserByEmail(email);
+  const user = await userRepo.findUserByEmail(email);
+  if (!user) {
+    throw new Error("User not found");
+  }
+
   return {
     user: {
-      id: reult.id,
-      name: reult.name,
-      email: reult.email,
-      roleId: reult.roleId,
-      departmentId: reult.employee.departmentId,
-      createdAt: reult.createdAt,
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      roleId: user.roleId,
+      departmentId: user.employee?.departmentId || null,
+      isDeactivated: user.isDeactivated,
+      createdAt: user.createdAt,
     },
   };
 };
 
 export const getUsers = async (data) => {
-  const result = await userRepo.getUsers(data);
+  const { page, limit, ...filters } = data || {};
+  const result = await userRepo.getUsers(page, limit, filters);
   return result;
 };
 
