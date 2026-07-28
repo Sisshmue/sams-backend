@@ -1,7 +1,7 @@
 import prisma from "../data/prisma.js";
 
 //get all assets
-export const getAllAssets = (page = 1, limit = 10, ...filter) => {
+export const getAllAssets = (page = 1, limit = 10, filter = {}) => {
   const {
     name,
     serialNumber,
@@ -81,4 +81,3 @@ export const deleteAsset = (id) => {
     },
   });
 };
-
