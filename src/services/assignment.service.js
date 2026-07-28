@@ -7,7 +7,7 @@ export const createAssignment = async (assetId, data) => {
       where: { id: assetId },
     });
 
-    const activeAssignment = await tx.assetAssignment.findUnique({
+    const activeAssignment = await tx.assetAssignment.findFirst({
       where: {
         assetId,
         returnedAt: null,
