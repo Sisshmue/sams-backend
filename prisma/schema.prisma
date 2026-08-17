@@ -44,8 +44,9 @@ model User {
   createdAt     DateTime @default(now())
   isDeactivated Boolean  @default(false)
 
-  role     Role      @relation(fields: [roleId], references: [id])
-  employee Employee?
+  role         Role          @relation(fields: [roleId], references: [id])
+  employee     Employee?
+  activityLogs ActivityLog[]
 }
 
 model Role {
@@ -119,4 +120,14 @@ model Department {
   name String
 
   employee Employee[]
+}
+
+model ActivityLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  action    String
+  details   String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }
