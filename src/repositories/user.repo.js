@@ -28,6 +28,8 @@ export const findEmployeByUserId = (userId, tx = prisma) => {
   return tx.employee.findUnique({
     where: { userId },
     select: {
+      id: true,
+      departmentId: true,
       user: {
         select: {
           isDeactivated: true,
