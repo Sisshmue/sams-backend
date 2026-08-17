@@ -46,13 +46,31 @@ route.get(
   roleMiddleware("Admin"),
   userController.createRole,
 );
+route.post(
+  "/createRole",
+  authMiddleware,
+  roleMiddleware("Admin"),
+  userController.createRole,
+);
 route.get(
   "/updateRole",
   authMiddleware,
   roleMiddleware("Admin"),
   userController.updateRole,
 );
+route.post(
+  "/updateRole",
+  authMiddleware,
+  roleMiddleware("Admin"),
+  userController.updateRole,
+);
 route.get(
+  "/deleteRole",
+  authMiddleware,
+  roleMiddleware("Admin"),
+  userController.deleteRole,
+);
+route.post(
   "/deleteRole",
   authMiddleware,
   roleMiddleware("Admin"),
