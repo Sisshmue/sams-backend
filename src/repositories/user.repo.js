@@ -58,6 +58,7 @@ export const getUsers = (page = 1, limit = 10, filters = {}) => {
       roleId: true,
       employee: {
         select: {
+          id: true,
           departmentId: true,
         },
       },
@@ -78,6 +79,7 @@ export const updateUser = (userId, data) => {
       roleId: true,
       employee: {
         select: {
+          id: true,
           departmentId: true,
         },
       },
