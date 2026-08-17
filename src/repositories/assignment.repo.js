@@ -20,3 +20,18 @@ export const getAllAssignment = (page = 1, limit = 10, filter = {}) => {
     take: limit,
   });
 };
+
+// get assignment by id
+export const getAssignmentById = (id, tx = prisma) => {
+  return tx.assetAssignment.findUnique({
+    where: { id },
+  });
+};
+
+// update assignment (for returning assets)
+export const updateAssignment = (id, data, tx = prisma) => {
+  return tx.assetAssignment.update({
+    where: { id },
+    data,
+  });
+};

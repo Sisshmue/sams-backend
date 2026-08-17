@@ -28,7 +28,7 @@ export const createAssignment = async (req, res) => {
       notes: notes || null,
     };
 
-    const result = await assignmentServices.createAssignment(parsedAssetId, data);
+    const result = await assignmentServices.createAssignment(parsedAssetId, data, req.user.userId);
     res.status(201).json({
       message: "Asset assigned successfully",
       result,
@@ -61,6 +61,29 @@ export const getAllAssignment = async (req, res) => {
 
     const result = await assignmentServices.getAllAssignment(page, limit, filter);
     res.status(200).json(result);
+  } catch (error) {
+    res.status(400).json({
+      message: error.message,
+    });
+  }
+};
+
+// Return an asset assignment (mark as returned)
+export const returnAssignment = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+      return res.status(400).json({ message: "Invalid assignment ID" });
+    }
+
+    const { notes } = req.body;
+    const userId = req.user.userId;
+
+    const result = await assignmentServices.returnAssignment(id, notes, userId);
+    res.status(200).json({
+      message: "Asset returned successfully",
+      result,
+    });
   } catch (error) {
     res.status(400).json({
       message: error.message,
