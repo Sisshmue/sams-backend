@@ -191,3 +191,100 @@ Content-Type: application/json
   "employeeId": 1,
   "notes": "Assigned to team lead for development use."
 }
+
+### Return an assignment (Admin only)
+PATCH {{baseUrl}}/assignment/1/return
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "notes": "Returned in good condition with minor scratches."
+}
+
+
+# ==========================================
+# MAINTENANCE ENDPOINTS (Requires Auth)
+# ==========================================
+
+### Create a new maintenance request (Auth required)
+POST {{baseUrl}}/maintenance
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "assetId": 1,
+  "description": "Screen flickering issues on MacBook",
+  "priority": "HIGH"
+}
+
+### Get all maintenance requests (Auth required)
+GET {{baseUrl}}/maintenance?page=1&limit=10
+Authorization: Bearer {{authToken}}
+
+### Get maintenance request details by ID (Auth required)
+GET {{baseUrl}}/maintenance/1
+Authorization: Bearer {{authToken}}
+
+### Update maintenance request status / details (Admin/Technician only)
+PUT {{baseUrl}}/maintenance/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "status": "IN_PROGRESS",
+  "assignedTo": 1
+}
+
+### Complete maintenance request (Admin/Technician only)
+PUT {{baseUrl}}/maintenance/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "status": "COMPLETED",
+  "cost": 150.00
+}
+
+
+# ==========================================
+# DEPARTMENT ENDPOINTS (Requires Auth/Admin)
+# ==========================================
+
+### Create a department (Admin only)
+POST {{baseUrl}}/department
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "Engineering"
+}
+
+### Get all departments
+GET {{baseUrl}}/department
+Authorization: Bearer {{authToken}}
+
+### Get department by ID
+GET {{baseUrl}}/department/1
+Authorization: Bearer {{authToken}}
+
+### Update department (Admin only)
+PUT {{baseUrl}}/department/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "Software Engineering"
+}
+
+### Delete department (Admin only)
+DELETE {{baseUrl}}/department/1
+Authorization: Bearer {{authToken}}
+
+
+# ==========================================
+# ACTIVITY LOG ENDPOINTS (Requires Auth & Admin)
+# ==========================================
+
+### Get all activity logs
+GET {{baseUrl}}/activity-log?page=1&limit=20
+Authorization: Bearer {{authToken}}
