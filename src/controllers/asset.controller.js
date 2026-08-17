@@ -71,7 +71,7 @@ export const createAsset = async (req, res) => {
       data.purchaseCost = parseFloat(data.purchaseCost);
     }
 
-    const result = await assetServices.createAsset(data);
+    const result = await assetServices.createAsset(data, req.user.userId);
     res.status(201).json(result);
   } catch (error) {
     res.status(400).json({
@@ -96,7 +96,7 @@ export const editAsset = async (req, res) => {
       data.purchaseCost = parseFloat(data.purchaseCost);
     }
 
-    const result = await assetServices.editAsset(id, data);
+    const result = await assetServices.editAsset(id, data, req.user.userId);
     res.status(200).json(result);
   } catch (error) {
     res.status(400).json({
@@ -118,7 +118,7 @@ export const updateAssetStatusById = async (req, res) => {
       return res.status(400).json({ message: "Status is required in request body" });
     }
 
-    const result = await assetServices.updateAssetStatusById(id, status);
+    const result = await assetServices.updateAssetStatusById(id, status, req.user.userId);
     res.status(200).json(result);
   } catch (error) {
     res.status(400).json({
@@ -135,7 +135,7 @@ export const deleteAsset = async (req, res) => {
       return res.status(400).json({ message: "Invalid asset ID" });
     }
 
-    const result = await assetServices.deleteAsset(id);
+    const result = await assetServices.deleteAsset(id, req.user.userId);
     res.status(200).json({
       message: "Asset deleted successfully",
       result,
