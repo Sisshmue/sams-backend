@@ -20,8 +20,19 @@ app.use("/maintenance", maintenanceRoute);
 app.use("/department", departmentRoute);
 app.use("/activity-log", activityLogRoute);
 
-const port = 3000;
+const port = process.env.PORT || 5000;
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`server is running on port ${port}`);
 });
+
+server.on("error", (err) => {
+  if (err.code === "EACCES") {
+    console.error(`Permission denied binding to port ${port}. Port is excluded by Windows NAT/Hyper-V.`);
+  } else if (err.code === "EADDRINUSE") {
+    console.error(`Port ${port} is already in use.`);
+  } else {
+    console.error("Server startup error:", err);
+  }
+});
+
